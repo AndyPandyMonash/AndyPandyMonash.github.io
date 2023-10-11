@@ -1,0 +1,39 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Top 100 Universities by Location",
+    "width": "container",
+    "height": 270,
+    "data": {
+      "url": "https://raw.githubusercontent.com/AndyPandyMonash/FIT3179/main/World%20University%20Rankings%202023.csv"
+    },
+    "transform": [
+      {"window": [{"op":"count", "as": "count"}]},
+      {"filter": "datum.count <= 100"},
+      {"aggregate": [{"op": "count", "field": "Location","as": "countofunis"}],
+       "groupby": ["Location"]
+      } 
+    ],
+    "config": {
+      "view": {
+         "stroke": "transparent"
+      }
+    },
+    "encoding": {
+      "theta": {"field": "countofunis", "type": "quantitative", "stack": true},
+      "color": {"field": "Location", "type": "nominal"},
+      "tooltip": [
+        {"field": "Location", "type": "nominal"},
+        {"field": "countofunis", "type": "quantitative", "title": "Percentage of Total"}
+      ]
+    },
+    "layer": [{
+      "mark": {"type": "arc", "innerRadius": 50}
+      },
+      {
+      "mark": {"type": "text", "radius": 150},
+      "encoding": {
+        "text": {"field": "countofunis", "type": "quantitative", "format": ""}
+      }
+      }
+    ]
+  }

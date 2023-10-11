@@ -1,0 +1,143 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 400,
+  "title": "University Overall Score vs Teaching Score",
+  "data": {
+    "url": "https://raw.githubusercontent.com/AndyPandyMonash/FIT3179/main/World%20University%20Rankings%202023.csv"
+  },
+  "params": [
+    {
+      "name": "Cohort_Size_Above",
+      "value": 100000,
+      "bind": {
+        "input": "range",
+        "min": 0,
+        "max": 100000,
+        "step": 5000,
+        "name": "Cohort Size"
+      }
+    },
+    {
+      "name": "Location_Filter",
+      "bind": {
+        "input": "select",
+        "options": [null, "United States of America", "United Kingdom", "Switzerland", "Canada", "Australia"],
+        "labels": ["Show All","United States of America", "United Kingdom", "Switzerland", "Canada", "Australia"],
+        "name": "Counrty"
+      }
+    }
+  ],
+  "transform": [
+    { "filter": "datum['OverAll Score'] > 0" },
+    { "filter": "datum['Teaching Score'] > 0" },
+    { "filter": "datum['No of student'] < Cohort_Size_Above" },
+    { "filter": "Location_Filter == null || datum.Location == Location_Filter"}
+  ],
+  "layer": [
+    {
+      "mark": "circle",
+      "encoding": {
+        "x": {
+          "field": "Teaching Score",
+          "type": "quantitative",
+          "title": "Teaching Score",
+          "axis": { "tickCount": 7 },
+          "scale": { "domain": [20, 100] }
+        },
+        "y": {
+          "field": "OverAll Score",
+          "type": "quantitative",
+          "title": "Overall Score",
+          "axis": { "tickCount": 7 },
+          "scale": { "domain": [20, 100] }
+        },
+        "size": {
+          "field": "No of student",
+          "type": "quantitative",
+          "title": "Cohort Size"
+        },
+        "color": {
+          "field": "Location",
+          "type": "nominal"
+        },
+        "opacity": { "value": 0.8 },
+        "tooltip": [
+          { "field": "Name of University", "type": "nominal" },
+          {
+            "field": "OverAll Score",
+            "type": "quantitative",
+            "title": "Overall Score"
+          },
+          { "field": "Teaching Score", "type": "quantitative" },
+          {
+            "field": "No of student",
+            "type": "quantitative",
+            "title": "Cohort Size"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "color": "#FF0000",
+        "opacity": 0.8,
+        "strokeDash": [6,4] 
+      },
+      "transform": [
+        {
+          "regression": "OverAll Score",
+          "on": "Teaching Score"
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "Teaching Score",
+          "type": "quantitative",
+          "title": "Teaching Score",
+          "axis": { "tickCount": 7 },
+          "scale": { "domain": [20, 100] }
+        },
+        "y": {
+          "field": "OverAll Score",
+          "type": "quantitative",
+          "title": "Overall Score",
+          "axis": { "tickCount": 7 },
+          "scale": { "domain": [20, 100] }
+        }
+      }
+    }, 
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "dx": -10,
+        "fontSize": 11.5,
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "x": {
+          "field": "Teaching Score",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "OverAll Score",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "Name of University",
+          "type": "nominal"
+        },
+        "opacity": {
+          "condition": {
+            "test": "datum['Name of University'] === 'University of Oxford' || datum['Name of University'] === 'Monash University' || datum['Name of University'] === 'The University of Tokyo'",
+            "value": 1
+          },
+          "value": 0
+        }
+      }
+    }
+  ]
+}
