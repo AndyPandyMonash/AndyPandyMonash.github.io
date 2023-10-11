@@ -2,7 +2,6 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": { "text": "Top 10 Universities" },
   "width": "container",
-  "height": 300,
   "data": {
     "url": "https://raw.githubusercontent.com/AndyPandyMonash/FIT3179/main/World%20University%20Rankings%202023.csv"
   },
@@ -23,7 +22,7 @@
       "type": "quantitative",
       "title": "Overall Score"
     },
-    "color": { "value": "#6d0370 " },
+    "color": { "value": "#066568" },
     "tooltip": [
       {
         "field": "Name of University",
