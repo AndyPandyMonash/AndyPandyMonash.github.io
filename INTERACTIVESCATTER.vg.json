@@ -1,0 +1,63 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 600,
+  "title": "University Overall Score vs Teaching Score",
+  "data": {
+    "url": "https://raw.githubusercontent.com/AndyPandyMonash/FIT3179/main/World%20University%20Rankings%202023.csv"
+  },
+  "params": [
+      {
+        "name": "Cohort_Size_Above",
+        "value": 100000,
+        "bind": {"input": "range", "min": 0, "max": 100000, "step": 5000, "name": "Cohort Size"}
+      }
+    ],
+    "selection": {
+      "location_selection": {
+        "type": "multi", "fields": ["Location"], "bind": "legend"
+      }
+    },
+    "transform":[
+      {"filter": "datum['OverAll Score'] > 0"},
+      {"filter": "datum['Teaching Score'] > 0"},
+      {"filter": "datum['No of student'] < Cohort_Size_Above"}
+    ],
+  "mark": "circle",
+  "encoding": {
+    "x": {
+      "field": "Teaching Score",
+      "type": "quantitative",
+      "title": "Teaching Score",
+      "axis": { "tickCount": 7 },
+      "scale": {"domain": [20, 100] }
+    },
+    "y": {
+      "field": "OverAll Score",
+      "type": "quantitative",
+      "title": "Overall Score",
+      "axis": { "tickCount": 7 },
+      "scale": {"domain": [20, 100] }
+    },
+    "size": {
+      "field": "No of student",
+      "type": "quantitative",
+      "title": "Cohort Size"
+    },
+    "color": {
+      "field": "Location",
+      "type": "nominal"
+    },
+    "opacity": {
+      "condition": {"selection": "location_selection", "value": 0.8},
+      "value": 0.1
+    },
+    "tooltip": [
+      {"field": "Name of University", "type": "nominal"},
+      {"field": "OverAll Score", "type": "quantitative", "title": "Overall Score"},
+      {"field": "Teaching Score", "type": "quantitative"},
+      {"field": "No of student", "type": "quantitative", "title": "Cohort Size"}
+    ]
+  }
+}
+  
